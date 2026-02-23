@@ -1,15 +1,15 @@
-# 🌐 English → Hindi Neural Machine Translation
+# English → Hindi Neural Machine Translation
 ### Fine-tuning Facebook's mBART-50 with LoRA for English-to-Hindi Translation
 
 ---
 
-## 📌 Overview
+## Overview
 
 This project fine-tunes **Facebook's `mbart-large-50`** model for **English-to-Hindi translation** using the HuggingFace `Seq2SeqTrainer` API with **LoRA (Low-Rank Adaptation)** for parameter-efficient training. The model was trained on a large parallel corpus sourced from Kaggle and monitored via TensorBoard.
 
 ---
 
-## 🧠 Model Background
+## Model Background
 
 ### What is mBART?
 
@@ -41,7 +41,7 @@ Despite IndicBART being the more "purpose-built" option for Hindi, its tokenizer
 
 ---
 
-## 📂 Dataset
+## Dataset
 
 - **Source:** [Hindi-English Parallel Corpus – Kaggle](https://www.kaggle.com/datasets/vaibhavkumar11/hindi-english-parallel-corpus)
 - **Total rows in dataset:** ~15.6 lakh (1,561,841 rows)
@@ -50,7 +50,7 @@ Despite IndicBART being the more "purpose-built" option for Hindi, its tokenizer
 
 ---
 
-## 🔬 Model & Tokenizer
+## Model & Tokenizer
 
 | Component | Detail |
 |-----------|--------|
@@ -67,7 +67,7 @@ IndicBART and its variants were explored first, but their tokenizers did not per
 
 ---
 
-## 🧹 Preprocessing Pipeline
+## Preprocessing Pipeline
 
 The following preprocessing steps were applied before tokenization:
 
@@ -81,13 +81,13 @@ The following preprocessing steps were applied before tokenization:
 
 ---
 
-## 📏 Max Token Length Strategy
+## Max Token Length Strategy
 
 Rather than using an arbitrary fixed max length, the 95th percentile of token length across **all sentences** in the training set was computed and used as `max_length`. This keeps the padding overhead low while covering the vast majority of real-world sentence lengths without truncating meaningful content.
 
 ---
 
-## ⚙️ LoRA Configuration
+## LoRA Configuration
 
 [PEFT](https://github.com/huggingface/peft) was used to apply LoRA adapters to the model for memory-efficient fine-tuning:
 
@@ -105,7 +105,7 @@ The model was wrapped using `get_peft_model()` before passing to the trainer.
 
 ---
 
-## 🏋️ Training Setup
+## Training Setup
 
 Training was handled by HuggingFace's `Seq2SeqTrainer` with the following setup:
 
@@ -128,19 +128,13 @@ Seq2SeqTrainingArguments(
 
 ---
 
-## 📊 TensorBoard Monitoring
+## TensorBoard Monitoring
 
 Training metrics were tracked in real-time using TensorBoard. To launch:
 
 ```bash
 tensorboard --logdir=./logs
 ```
-
-### Output / Screenshots
-
-> 📸 _Add TensorBoard training loss curve screenshot here_
-
-> 📸 _Add TensorBoard eval loss / BLEU score screenshot here_
 
 ---
 
@@ -159,7 +153,7 @@ pip install torch transformers datasets peft tensorboard tensorboardX kagglehub 
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 1. Clone the repo and open the notebook
 2. Authenticate with Kaggle and download the dataset via `kagglehub`
@@ -169,7 +163,7 @@ pip install torch transformers datasets peft tensorboard tensorboardX kagglehub 
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
@@ -181,7 +175,7 @@ pip install torch transformers datasets peft tensorboard tensorboardX kagglehub 
 
 ---
 
-## 🔭 Future Work
+## Future Work
 
 - Train on more rows (the full 15L dataset)
 - Evaluate with BLEU score on a held-out test set
@@ -190,7 +184,7 @@ pip install torch transformers datasets peft tensorboard tensorboardX kagglehub 
 
 ---
 
-## 📜 References
+## References
 
 - [mBART paper – Lewis et al., 2020](https://arxiv.org/abs/2001.08210)
 - [HuggingFace mbart-large-50](https://huggingface.co/facebook/mbart-large-50)
