@@ -87,6 +87,33 @@ Rather than using an arbitrary fixed max length, the 95th percentile of token le
 
 ---
 
+## LoRA — What, Why, and How
+
+### What is LoRA?
+
+**LoRA (Low-Rank Adaptation)** is a parameter-efficient fine-tuning technique introduced by Hu et al. (2021). The core idea is simple: instead of updating all the weights of a large pretrained model during fine-tuning, you **freeze the original weights** and inject small trainable matrices alongside them.
+
+Specifically, for a weight matrix `W` in the model, LoRA adds two low-rank matrices `A` and `B` such that the effective weight update is `ΔW = B × A`, where `B` and `A` are much smaller than `W`. The **rank `r`** controls how small these matrices are — a lower rank means fewer trainable parameters. During inference, `BA` can optionally be merged back into `W` with zero added latency.
+
+```
+# Conceptually, what LoRA does:
+# Original:   output = W · input
+# With LoRA:  output = (W + B·A) · input
+#             where W is frozen, and only B and A are trained
+```
+
+### Why use LoRA here?
+
+`mbart-large-50` is a ~600M parameter model. Full fine-tuning at this scale demands significant GPU memory and compute — often requiring multiple high-end GPUs or very long training runs. LoRA sidesteps this by reducing the number of trainable parameters dramatically, sometimes by **10–100x**, while still achieving competitive results. This makes it feasible to fine-tune mBART on a single Colab GPU without running out of memory.
+
+Beyond memory savings, LoRA adapters are also **modular and portable** — you save only the adapter weights (a few MBs) rather than a full model checkpoint, and can swap them in and out of the frozen base model as needed.
+
+### How it's applied in this project
+
+LoRA adapters were applied to the model's attention projection layers using HuggingFace's PEFT library. The base mBART weights were frozen, and only the injected low-rank matrices were trained. The adapted model was then passed directly into `Seq2SeqTrainer` like a regular HuggingFace model.
+
+---
+
 ## LoRA Configuration
 
 [PEFT](https://github.com/huggingface/peft) was used to apply LoRA adapters to the model for memory-efficient fine-tuning:
@@ -138,14 +165,13 @@ tensorboard --logdir=./logs
 
 ---
 
-## 🧪 Sample Translations
+## Sample Translations
 
 ![Result](result.png)
 
-
 ---
 
-## 📦 Requirements
+## Requirements
 
 ```bash
 pip install torch transformers datasets peft tensorboard tensorboardX kagglehub pandas numpy
@@ -187,6 +213,7 @@ pip install torch transformers datasets peft tensorboard tensorboardX kagglehub 
 ## References
 
 - [mBART paper – Lewis et al., 2020](https://arxiv.org/abs/2001.08210)
+- [LoRA paper – Hu et al., 2021](https://arxiv.org/abs/2106.09685)
 - [HuggingFace mbart-large-50](https://huggingface.co/facebook/mbart-large-50)
 - [PEFT / LoRA](https://github.com/huggingface/peft)
 - [Kaggle Dataset](https://www.kaggle.com/datasets/vaibhavkumar11/hindi-english-parallel-corpus)
