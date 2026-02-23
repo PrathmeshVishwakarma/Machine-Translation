@@ -146,12 +146,8 @@ tensorboard --logdir=./logs
 
 ## 🧪 Sample Translations
 
-> 📸 _Add a table or screenshot of sample English → Hindi translations here (before vs after fine-tuning)_
+![Result](result.png)
 
-| English Input | Model Output (Hindi) |
-|---------------|----------------------|
-| `...` | `...` |
-| `...` | `...` |
 
 ---
 
@@ -167,7 +163,7 @@ pip install torch transformers datasets peft tensorboard tensorboardX kagglehub 
 
 1. Clone the repo and open the notebook
 2. Authenticate with Kaggle and download the dataset via `kagglehub`
-3. Run all preprocessing cells
+3. Run all preprocessing cells in main.ipynb
 4. Configure LoRA and Seq2SeqTrainer
 5. Start training — monitor with TensorBoard
 
